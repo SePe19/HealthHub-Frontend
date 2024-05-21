@@ -1,16 +1,19 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-import { Workouts } from "./pages/Workouts";
-import WorkoutPage from "./pages/WorkoutPage";
-import { StatusBar } from 'expo-status-bar';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Workouts from './pages/Workouts';
+import CreateWorkout from './pages/CreateWorkout';
+//import BottomTabNavigator from './components/navigation/BottomTabNavigator';
+
+const Stack = createStackNavigator();
 
 export default function App() {
     return (
-        <View>
-            <Text>Open up App.js to start working on your app!</Text>
-            <Workouts />
-            <StatusBar style="auto" />
-            <WorkoutPage />
-        </View>
+        <NavigationContainer>
+            <Stack.Navigator>
+                <Stack.Screen name="Workouts" component={Workouts} />
+                <Stack.Screen name="CreateWorkout" component={CreateWorkout} />
+            </Stack.Navigator>
+        </NavigationContainer>
     );
 }
