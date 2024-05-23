@@ -10,7 +10,7 @@ const UserWorkout = ({ user_workouts }) => {
                     <View>
                         <Text>{item.title}</Text>
                         <Text>{item.description}</Text>
-                        <Text>{item.workout_type}</Text>
+                        <Text>{item.workoutType}</Text>
                     </View>
                 )}
                 keyExtractor={(item) => item.id.toString()}

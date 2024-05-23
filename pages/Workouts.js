@@ -8,9 +8,9 @@ const Workouts = ({ navigation }) => {
     const [userWorkouts, setUserWorkouts] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const [selectedWeek, setSelectedWeek] = useState(20)
+    const [selectedDate, setSelectedDate] = useState(currentDate(new Date()))
     const [selectedDay, setSelectedDay] = useState('')
-    const userWorkoutsURL = 'workout/user-workouts/'
+    const userWorkoutsURL = 'workout/user-workouts'
 
     const handleCreateWorkout = () => {
         navigation.navigate('CreateWorkout')
@@ -18,38 +18,6 @@ const Workouts = ({ navigation }) => {
 
     const username = 'John Doe';
     const motivationalQuote = 'Stay motivated!';
-    //Dummy Data for fetching Workout Properties. Replace workouts variable with the userWorkout useState
-    const workouts = [
-        { id: 1, title: 'Workout 1', description: 'Cardio Day, quick 10min warmup', workout_type: 'Running' },
-        { id: 2, title: 'Workout 2', description: 'Rough Cardio Day, 2km swim', workout_type: 'Swimming' },
-        { id: 3, title: 'Workout 3', description: 'Cycling practice, 80km', workout_type: 'Cycling' },
-        { id: 4, title: 'Workout 4', description: 'Morning workout', workout_type: 'Yoga' },
-        { id: 5, title: 'Workout 5', description: '4x10 Chest - 3x10 Biceps', workout_type: 'Strength' },
-        { id: 6, title: 'Workout 6', description: 'Cardio Day, quick 10min warmup', workout_type: 'Running' },
-        { id: 7, title: 'Workout 7', description: 'Rough Cardio Day, 2km swim', workout_type: 'Swimming' },
-    ];
-
-    //This is just dummy data, the idea is to get a calendar from an API to cycle through weeks, and then connect days to that week.
-    const workoutSchedule = {
-        20: {
-            Monday: [1],
-            Tuesday: [],
-            Wednesday: [],
-            Thursday: [],
-            Friday: [1, 5],
-            Saturday: [],
-            Sunday: [],
-        },
-        21: {
-            Monday: [6],
-            Tuesday: [2, 7],
-            Wednesday: [],
-            Thursday: [],
-            Friday: [],
-            Saturday: [],
-            Sunday: [],
-        },
-    };
 
     const days = [
         { short: 'M', full: 'Monday' },
@@ -61,30 +29,42 @@ const Workouts = ({ navigation }) => {
         { short: 'S', full: 'Sunday' },
     ];
 
+    function currentDate(date) {
+        const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+        return utcDate.getDate()
+    }
+
+
     const filterWorkouts = () => {
-        const workoutIds = workoutSchedule[selectedWeek]?.[selectedDay] || [];
-        return workouts.filter(workout => workoutIds.includes(workout.id));
+        const workoutIds = [selectedDate]?.[selectedDay] || [];
+        return userWorkouts.filter(workout => workoutIds.includes(workout.id));
     };
 
     const handleWeekChange = (increment) => {
-        setSelectedWeek(prevWeek => prevWeek + increment);
+        setSelectedDate(prevDate => prevDate + increment);
         setSelectedDay(''); // Reset day selection when week changes
     };
 
-    /*    useEffect(() => {
+
+        useEffect(() => {
             const fetchUserWorkouts = async () => {
                 try {
-                    const {data} = await httpService.get(userWorkoutsURL)
+                    const {data} = await httpService.get(userWorkoutsURL, {
+                        params: {
+                            userId: 1
+                        }
+                    });
                     setUserWorkouts(data)
                     setLoading(false)
-                    console.log(userWorkouts, "This is out user workout data")
+                    console.log(data, "This is out user workout data")
                 } catch (error) {
                     setError('Error fetching user workouts. Please try again later.');
                     setLoading(false);
                 }
             }
             fetchUserWorkouts()
-        }, []);*/
+        }, []);
+
 
     return (
         <View style={styles.container}>
@@ -93,7 +73,7 @@ const Workouts = ({ navigation }) => {
                 <TouchableOpacity onPress={() => handleWeekChange(-1)}>
                     <Text style={styles.weekChangeButton}>Previous Week</Text>
                 </TouchableOpacity>
-                <Text style={styles.weekHeading}>Week {selectedWeek}</Text>
+                <Text style={styles.weekHeading}>{selectedDay} {selectedDate}</Text>
                 <TouchableOpacity onPress={() => handleWeekChange(1)}>
                     <Text style={styles.weekChangeButton}>Next Week</Text>
                 </TouchableOpacity>

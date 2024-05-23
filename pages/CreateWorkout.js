@@ -1,26 +1,60 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { SelectList } from "react-native-dropdown-select-list";
+import httpService from "../services/httpService";
 
 const CreateWorkout = () => {
+    const workoutTypesURL = 'workout/workout-types'
+    const createUserWorkoutURL = 'workout/'
     const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
     const [workoutType, setWorkoutType] = useState('');
+    const [workoutTypeOptions, setWorkoutTypeOptions] = useState([]);
+    const [error, setError] = useState(null)
 
-    const handleSubmit = () => {
+    useEffect(() => {
+        const fetchUserWorkoutTypes = async () => {
+            try {
+                const {data} = await httpService.get(workoutTypesURL)
+                const options = data.map(type => ({ key: type, value: type }))
+                setWorkoutTypeOptions(options)
+                console.log(data, "This is the workout types data")
+            } catch (error) {
+                setError('Error fetching workout types. Please try again later.');
+            }
+        }
+        fetchUserWorkoutTypes()
+    }, []);
+
+    const handleSubmit = async () => {
         // Validate form data
-        if (!title.trim() || !workoutType.trim()) {
+        if (!title.trim() || !workoutType.trim() || !description.trim()) {
             return;
         }
 
-        // Submit form data
-        const workoutData = {
-            title,
-            workoutType,
-            // Add additional fields here
-        };
+        try {
+            // Submit form data
+            await httpService.post(createUserWorkoutURL, {
+                title,
+                description,
+                workoutType,
+            }, {
+                params: {
+                    userId: 1
+                }
+            });
 
-        // Clear form inputs
-        setTitle('');
-        setWorkoutType('');
+            // Clear form inputs after successful submission
+            setTitle('');
+            setDescription('');
+            setWorkoutType('');
+
+            // Optionally, you can add a success message or perform any other action here
+            console.log('Workout successfully submitted!');
+        } catch (error) {
+            // Handle errors
+            console.error('Error submitting workout:', error);
+        }
     };
 
     return (
@@ -34,11 +68,17 @@ const CreateWorkout = () => {
             />
             <TextInput
                 style={styles.input}
-                placeholder="Enter Workout Type"
-                value={workoutType}
-                onChangeText={setWorkoutType}
+                placeholder="Enter Description"
+                value={description}
+                onChangeText={setDescription}
             />
-            {/* Add more input fields as needed */}
+            <SelectList
+                setSelected={setWorkoutType}
+                data={workoutTypeOptions}
+                placeholder="Select Workout Type"
+                boxStyles={styles.dropdown} // optional: to style the dropdown box
+                dropdownStyles={styles.dropdown} // optional: to style the dropdown items
+            />
             <Button title="Submit" onPress={handleSubmit} />
         </View>
     );
@@ -62,6 +102,14 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderRadius: 5,
         paddingHorizontal: 10,
+        marginBottom: 10,
+    },
+    picker: {
+        width: '100%',
+        height: 40,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
         marginBottom: 10,
     },
 });
