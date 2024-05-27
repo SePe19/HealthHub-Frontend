@@ -1,43 +1,43 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
-import HomeScreen from '../../screens/HomeScreen';
-import WorkoutScreen from '../../screens/WorkoutScreen';
-import DashboardScreen from '../../screens/DashboardScreen';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
 
-const Tab = createBottomTabNavigator();
-
-function BottomTabNavigator() {
+const BottomTabNavigator = ({ selectedFooter, setSelectedFooter }) => {
     return (
-        <NavigationContainer>
-            <Tab.Navigator
-                screenOptions={({ route }) => ({
-                    tabBarIcon: ({ focused, color, size }) => {
-                        let iconName;
-
-                        if (route.name === 'Home') {
-                            iconName = focused ? 'ios-home' : 'ios-home-outline';
-                        } else if (route.name === 'Workout') {
-                            iconName = focused ? 'ios-settings' : 'ios-settings-outline';
-                        } else if (route.name === 'Dashboard') {
-                            iconName = focused ? 'ios-person' : 'ios-person-outline';
-                        }
-
-                        return <Ionicons name={iconName} size={size} color={color} />;
-                    },
-                })}
-                tabBarOptions={{
-                    activeTintColor: 'tomato',
-                    inactiveTintColor: 'gray',
-                }}
-            >
-                <Tab.Screen name="Dashboard" component={DashboardScreen} />
-                <Tab.Screen name="Home" component={HomeScreen} />
-                <Tab.Screen name="Workout" component={WorkoutScreen} />
-            </Tab.Navigator>
-        </NavigationContainer>
+        <View style={styles.footer}>
+            <TouchableOpacity style={styles.footerItem} onPress={() => setSelectedFooter('Dashboard')}>
+                <FontAwesome5 name="th-large" size={24} color={selectedFooter === 'Dashboard' ? 'green' : 'white'} />
+                <Text style={[styles.footerText, selectedFooter === 'Dashboard' && styles.footerTextSelected]}>Dashboard</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.footerItem} onPress={() => setSelectedFooter('Home')}>
+                <FontAwesome5 name="home" size={24} color={selectedFooter === 'Home' ? 'green' : 'white'} />
+                <Text style={[styles.footerText, selectedFooter === 'Home' && styles.footerTextSelected]}>Home</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.footerItem} onPress={() => setSelectedFooter('Workouts')}>
+                <FontAwesome5 name="dumbbell" size={24} color={selectedFooter === 'Workouts' ? 'green' : 'white'} />
+                <Text style={[styles.footerText, selectedFooter === 'Workouts' && styles.footerTextSelected]}>Workouts</Text>
+            </TouchableOpacity>
+        </View>
     );
-}
+};
+
+const styles = StyleSheet.create({
+    footer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        backgroundColor: '#444',
+        paddingVertical: 10,
+    },
+    footerItem: {
+        alignItems: 'center',
+    },
+    footerText: {
+        color: 'white',
+        marginTop: 5,
+    },
+    footerTextSelected: {
+        color: 'green',
+    },
+});
 
 export default BottomTabNavigator;
