@@ -13,7 +13,7 @@ function HomeScreen() {
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.username}>Kevin</Text>
-                <Text style={styles.subtitle}>No one cared who I was 'til I started edging.</Text>
+                <Text style={styles.subtitle}>No one cared who I was 'til I started working out.</Text>
                 <MaterialIcons name="account-circle" size={40} color="white" style={styles.profileIcon} />
             </View>
             <Menu selectedMenu={selectedMenu} setSelectedMenu={setSelectedMenu} />
