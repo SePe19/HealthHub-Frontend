@@ -16,18 +16,43 @@ const TabNavigator = () => {
                 tabBarInactiveTintColor: 'gray',
                 tabBarLabelStyle: styles.label,
                 tabBarStyle: styles.tabBar,
+                headerStyle: {
+                    backgroundColor: 'lightblue',
+                },
+                headerTintColor: 'white',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                },
             }}
         >
-            <Tab.Screen name="Dashboard" component={DashboardScreen} />
-            <Tab.Screen name="Home" component={HomeScreen} />
-            <Tab.Screen name="Workouts" component={WorkoutsScreen} />
+            <Tab.Screen
+                name="Dashboard"
+                component={DashboardScreen}
+                options={{
+                    headerShown: false, // Hide the default header
+                }}
+            />
+            <Tab.Screen
+                name="Home"
+                component={HomeScreen}
+                options={{
+                    headerShown: false, // Hide the default header
+                }}
+            />
+            <Tab.Screen
+                name="Workouts"
+                component={WorkoutsScreen}
+                options={{
+                    headerShown: false, // Hide the default header
+                }}
+            />
         </Tab.Navigator>
     );
 };
 
 const styles = StyleSheet.create({
     tabBar: {
-        backgroundColor: 'yellow',
+        backgroundColor: 'lightgray',
         borderTopWidth: 1,
         borderTopColor: 'gray',
     },
