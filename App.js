@@ -1,19 +1,16 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Workouts from './pages/Workouts';
-import CreateWorkout from './pages/CreateWorkout';
-//import BottomTabNavigator from './components/navigation/BottomTabNavigator';
+//import { createStackNavigator } from '@react-navigation/stack';
+//import Workouts from './pages/Workouts';
+//import CreateWorkout from './pages/CreateWorkout';
+import TabNavigator from './components/navigation/TabNavigator';
 
-const Stack = createStackNavigator();
-
-export default function App() {
+const App = () => {
     return (
         <NavigationContainer>
-            <Stack.Navigator>
-                <Stack.Screen name="Workouts" component={Workouts} />
-                <Stack.Screen name="CreateWorkout" component={CreateWorkout} />
-            </Stack.Navigator>
+            <TabNavigator />
         </NavigationContainer>
     );
-}
+};
+
+export default App;
