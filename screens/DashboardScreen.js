@@ -1,12 +1,25 @@
 import * as React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import WorkoutCompletionCard from "../components/Dashboard/WorkoutCompletionCard";
+import FavouriteWorkoutsCard from "../components/Dashboard/FavouriteWorkoutsCard";
+import colors from '../styles/colors';
 
 function DashboardScreen() {
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Dashboard Screen</Text>
+        <View style={styles.section}>
+            <WorkoutCompletionCard/>
+            <FavouriteWorkoutsCard/>
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    section: {
+        backgroundColor: colors.background,
+        height: '100%',
+        paddingTop: 10,
+        gap: 10
+    },
+});
 
 export default DashboardScreen;
