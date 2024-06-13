@@ -3,7 +3,7 @@ import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Menu from '../components/Menu';
 import Card from '../components/Card';
-import BottomTabNavigator from '../components/navigation/BottomTabNavigator';
+import colors from '../styles/colors';
 
 function HomeScreen() {
     const [selectedMenu, setSelectedMenu] = useState('Strength');
@@ -15,8 +15,8 @@ function HomeScreen() {
                 <Text style={styles.username}>Kevin</Text>
                 <Text style={styles.subtitle}>No one cared who I was 'til I started working out.</Text>
                 <MaterialIcons name="account-circle" size={40} color="white" style={styles.profileIcon} />
+                <Menu selectedMenu={selectedMenu} setSelectedMenu={setSelectedMenu}/>
             </View>
-            <Menu selectedMenu={selectedMenu} setSelectedMenu={setSelectedMenu} />
             <ScrollView style={styles.content}>
                 <Card
                     title="Deadlift more!"
@@ -34,7 +34,6 @@ function HomeScreen() {
                     imageUrl="https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8d29ya291dHxlbnwwfHwwfHx8MA%3D%3D"
                 />
             </ScrollView>
-            <BottomTabNavigator selectedFooter={selectedFooter} setSelectedFooter={setSelectedFooter} />
         </View>
     );
 }
@@ -42,11 +41,11 @@ function HomeScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#333',
+        backgroundColor: colors.background,
     },
     header: {
         padding: 20,
-        backgroundColor: '#444',
+        backgroundColor: colors.lightGrey,
         flexDirection: 'column',
         alignItems: 'flex-start',
         justifyContent: 'center',
@@ -69,7 +68,14 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         padding: 10,
+        backgroundColor: colors.background,
     },
+    card: {
+        backgroundColor: colors.grey,
+    },
+    menu: {
+        backgroundColor: colors.grey,
+    }
 });
 
 export default HomeScreen;

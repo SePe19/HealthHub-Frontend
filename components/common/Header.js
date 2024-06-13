@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, Text, Image, StyleSheet } from 'react-native'
+import colors from '../../styles/colors'
 
 const Header = ({ profilePicture, username, motivationalQuote }) => {
     return (
@@ -18,7 +19,7 @@ const styles= StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: '#f8f8f8',
+        backgroundColor: colors.lightGrey,
         padding: 20,
         borderBottomWidth: 1,
         borderBottomColor: '#eee',
