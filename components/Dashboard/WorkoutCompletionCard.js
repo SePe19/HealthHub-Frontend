@@ -55,7 +55,7 @@ const WorkoutCompletionCard = () => {
                 <Text style={styles.completedNum}>{comData.completed_workouts}</Text>
             </View>
             <View style={styles.column}>
-                <PercentageCircle radius={50} percent={comData.workout_completion_percent} color={colors.mainColor} bgcolor={colors.darkGrey} borderWidth={8} innerColor={colors.grey} textStyle={{fontSize: 20, color: colors.textPrimary}}></PercentageCircle>
+                <PercentageCircle radius={60} borderWidth={10} percent={comData.workout_completion_percent} color={colors.mainColor} bgcolor={colors.darkGrey} innerColor={colors.grey} textStyle={{fontSize: 22, color: colors.textPrimary}}></PercentageCircle>
                 <Text style={styles.text}>Completed {comData.completed_workouts}/{comData.incomplete_workouts + comData.completed_workouts} Training sessions completed. Great Job!</Text>
             </View>
         </View>

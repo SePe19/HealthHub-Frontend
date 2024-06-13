@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
         paddingBottom: 15,
     },
     label: {
-        fontSize: 16,
+        fontSize: 15,
         fontWeight: 400,
     },
 });

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
+import colors from '../styles/colors'
 
 const Card = ({ title, subtitle, imageUrl }) => {
     return (
@@ -17,14 +18,14 @@ const Card = ({ title, subtitle, imageUrl }) => {
 const styles = StyleSheet.create({
     card: {
         flexDirection: 'row',
-        backgroundColor: '#444',
+        backgroundColor: colors.grey,
         marginVertical: 5,
         borderRadius: 10,
         overflow: 'hidden',
     },
     cardImage: {
         width: 100,
-        height: 100,
+        height: 110,
     },
     cardTextContainer: {
         flex: 1,
@@ -41,8 +42,9 @@ const styles = StyleSheet.create({
         marginVertical: 5,
     },
     cardLink: {
-        color: 'green',
+        color: colors.mainColor,
         marginTop: 5,
+        alignSelf: "flex-end",
     },
 });
 

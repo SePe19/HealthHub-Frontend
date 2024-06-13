@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import colors from '../styles/colors'
 
 const Menu = ({ selectedMenu, setSelectedMenu }) => {
     return (
@@ -26,8 +27,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        backgroundColor: '#555',
+        width: '100%',
+        backgroundColor: colors.grey,
+        marginTop: 20,
         paddingVertical: 10,
+        marginRight: 10,
+        borderRadius: 40,
     },
     menuItem: {
         alignItems: 'center',
@@ -36,7 +41,7 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     menuItemSelected: {
-        backgroundColor: '#333',
+        backgroundColor: colors.darkGrey,
         borderRadius: 10,
     },
     menuText: {
@@ -44,7 +49,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     menuTextSelected: {
-        color: 'green',
+        color: colors.mainColor,
     },
 });
 
