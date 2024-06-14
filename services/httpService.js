@@ -1,6 +1,13 @@
 import axios from 'axios';
+import Constants from 'expo-constants';
 
-axios.defaults.baseURL = process.env.HEALTH_HUB_API_URL;
+const { healthHubApiUrl } = Constants.expoConfig.extra;
+
+console.log('API URL:', healthHubApiUrl);
+
+axios.defaults.baseURL = healthHubApiUrl;
+
+console.log(axios.defaults.baseURL);
 
 const httpService = {
     get: axios.get,

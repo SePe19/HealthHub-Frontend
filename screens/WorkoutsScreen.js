@@ -3,8 +3,9 @@ import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Button } from 're
 import Header from '../components/Header.js'
 import UserWorkout from '../components/UserWorkout.js'
 import httpService from '../services/httpService'
+import colors from '../styles/colors'
 
-const Workouts = ({ navigation }) => {
+const WorkoutsScreen = ({ navigation }) => {
     const [userWorkouts, setUserWorkouts] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -46,24 +47,24 @@ const Workouts = ({ navigation }) => {
     };
 
 
-        useEffect(() => {
-            const fetchUserWorkouts = async () => {
-                try {
-                    const {data} = await httpService.get(userWorkoutsURL, {
-                        params: {
-                            userId: 1
-                        }
-                    });
-                    setUserWorkouts(data)
-                    setLoading(false)
-                    console.log(data, "This is out user workout data")
-                } catch (error) {
-                    setError('Error fetching user workouts. Please try again later.');
-                    setLoading(false);
-                }
+    useEffect(() => {
+        const fetchUserWorkouts = async () => {
+            try {
+                const {data} = await httpService.get(userWorkoutsURL, {
+                    params: {
+                        userId: 1
+                    }
+                });
+                setUserWorkouts(data)
+                setLoading(false)
+                console.log(data, "This is out user workout data")
+            } catch (error) {
+                setError('Error fetching user workouts. Please try again later.');
+                setLoading(false);
             }
-            fetchUserWorkouts()
-        }, []);
+        }
+        fetchUserWorkouts()
+    }, []);
 
 
     return (
@@ -103,16 +104,16 @@ const Workouts = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: colors.background,
     },
     weekContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: 20,
-        backgroundColor: '#f8f8f8',
+        backgroundColor: colors.grey,
         borderBottomWidth: 1,
-        borderBottomColor: '#eee',
+        borderBottomColor: colors.background,
     },
     weekHeading: {
         fontSize: 24,
@@ -120,37 +121,37 @@ const styles = StyleSheet.create({
     },
     weekChangeButton: {
         fontSize: 18,
-        color: '#007AFF',
+        color: colors.mainColor,
     },
     daysContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         padding: 10,
-        backgroundColor: '#f8f8f8',
+        backgroundColor: colors.background,
     },
     day: {
         width: 40,
         height: 40,
-        borderRadius: 20,
-        backgroundColor: '#ddd',
+        borderRadius: 10,
+        backgroundColor: colors.secondaryColor,
         justifyContent: 'center',
         alignItems: 'center',
         marginHorizontal: 5,
     },
     selectedDay: {
-        backgroundColor: '#007AFF',
+        backgroundColor: colors.mainColor,
     },
     dayText: {
-        color: 'white',
+        color: colors.background,
         fontSize: 18,
         fontWeight: 'bold',
     },
     placeholderText: {
         fontSize: 16,
-        color: 'gray',
+        color: 'white',
         textAlign: 'center',
         marginTop: 20,
     },
 });
 
-export default Workouts
+export default WorkoutsScreen

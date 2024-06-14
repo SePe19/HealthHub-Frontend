@@ -1,16 +1,13 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-import { Workouts } from "./pages/Workouts";
-import WorkoutPage from "./pages/WorkoutPage";
-import { StatusBar } from 'expo-status-bar';
+import { NavigationContainer } from '@react-navigation/native';
+import TabNavigator from './components/navigation/TabNavigator';
 
-export default function App() {
+const App = () => {
     return (
-        <View>
-            <Text>Open up App.js to start working on your app!</Text>
-            <Workouts />
-            <StatusBar style="auto" />
-            <WorkoutPage />
-        </View>
+        <NavigationContainer>
+            <TabNavigator />
+        </NavigationContainer>
     );
-}
+};
+
+export default App;
