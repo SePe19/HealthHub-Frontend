@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import httpService from '../services/httpService';
+import bcrypt from "bcryptjs";
 
 const SignupScreen = () => {
     const [username, setUsername] = useState('');
@@ -11,14 +12,28 @@ const SignupScreen = () => {
     const handleSignup = async () => {
         if (username === '' || password === '') {
             Alert.alert('Error', 'Please fill in all fields.');
+        } else if(password !== confirmPassword) {
+            Alert.alert('Error', 'Passwords do not match.');
         } else {
             try {
-                const response = await httpService.post('/auth/signup', {
+                const hashedPassword = await bcrypt.hash(password, 12);
+
+                const signupResponse = await httpService.post('/auth/signup', {
                     username: username,
-                    password: password
+                    password: hashedPassword
                 });
-                Alert.alert('Success', `Logged in as ${username}`);
-                console.log('Login response:', response.data);
+
+                console.log('Signup response:', signupResponse.data);
+
+                const loginResponse = await httpService.post('/auth/login', {
+                    username: username,
+                    password: hashedPassword
+                });
+
+                sessionStorage.setItem('userId', loginResponse.data);
+
+                Alert.alert('Success', `Successfully created account and logged in as ${username}`);
+                console.log('Login response:', loginResponse.data);
             } catch (error) {
                 Alert.alert('Error', `Login failed: ${error.response ? error.response.data : error.message}`);
                 console.error('Login error:', error);
