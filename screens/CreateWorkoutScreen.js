@@ -31,7 +31,6 @@ const CreateWorkout = () => {
         if (!title.trim() || !workoutType.trim() || !description.trim()) {
             return;
         }
-
         try {
             // Submit form data
             await httpService.post(createUserWorkoutURL, {
@@ -43,16 +42,13 @@ const CreateWorkout = () => {
                     userId: 1
                 }
             });
-
             // Clear form inputs after successful submission
             setTitle('');
             setDescription('');
             setWorkoutType('');
 
-            // Optionally, you can add a success message or perform any other action here
             console.log('Workout successfully submitted!');
         } catch (error) {
-            // Handle errors
             console.error('Error submitting workout:', error);
         }
     };

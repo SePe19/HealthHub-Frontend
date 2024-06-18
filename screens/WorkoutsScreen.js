@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from 'react'
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Button } from 'react-native'
-import Header from '../components/Header.js'
-import UserWorkout from '../components/UserWorkout.js'
-import httpService from '../services/httpService'
-import colors from '../styles/colors'
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Button } from 'react-native';
+import Header from '../components/Header.js';
+import UserWorkout from '../components/UserWorkout.js';
+import httpService from '../services/httpService';
 
-const WorkoutsScreen = ({ navigation }) => {
-    const [userWorkouts, setUserWorkouts] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
-    const [selectedDate, setSelectedDate] = useState(currentDate(new Date()))
-    const [selectedDay, setSelectedDay] = useState('')
-    const userWorkoutsURL = 'workout/user-workouts'
+const Workouts = ({ navigation }) => {
+    const [userWorkouts, setUserWorkouts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [selectedDay, setSelectedDay] = useState('');
+    const userWorkoutsURL = 'user/1/scheduled-workouts-for-week';
 
     const handleCreateWorkout = () => {
-        navigation.navigate('CreateWorkout')
-    }
+        navigation.navigate('CreateWorkout', { date: selectedDate });
+    };
 
     const username = 'John Doe';
     const motivationalQuote = 'Stay motivated!';
@@ -30,42 +29,44 @@ const WorkoutsScreen = ({ navigation }) => {
         { short: 'S', full: 'Sunday' },
     ];
 
-    function currentDate(date) {
-        const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-        return utcDate.getDate()
-    }
-
-
-    const filterWorkouts = () => {
-        const workoutIds = [selectedDate]?.[selectedDay] || [];
-        return userWorkouts.filter(workout => workoutIds.includes(workout.id));
+    const handleDayChange = (day) => {
+        const dayIndex = days.findIndex(d => d.full === day);
+        const newDate = new Date(selectedDate);
+        newDate.setDate(newDate.getDate() + (dayIndex - newDate.getDay() + 1));
+        setSelectedDate(newDate);
+        setSelectedDay(day);
     };
 
     const handleWeekChange = (increment) => {
-        setSelectedDate(prevDate => prevDate + increment);
+        const newDate = new Date(selectedDate);
+        newDate.setDate(newDate.getDate() + increment * 7);
+        setSelectedDate(newDate);
         setSelectedDay(''); // Reset day selection when week changes
     };
-
 
     useEffect(() => {
         const fetchUserWorkouts = async () => {
             try {
-                const {data} = await httpService.get(userWorkoutsURL, {
-                    params: {
-                        userId: 1
-                    }
+                const { data } = await httpService.get(userWorkoutsURL, {
+                    params: {date: selectedDate}
                 });
-                setUserWorkouts(data)
-                setLoading(false)
-                console.log(data, "This is out user workout data")
+                setUserWorkouts(data);
+                setLoading(false);
+                console.log(data, "This is our user workout data");
             } catch (error) {
                 setError('Error fetching user workouts. Please try again later.');
                 setLoading(false);
             }
-        }
-        fetchUserWorkouts()
-    }, []);
+        };
+        fetchUserWorkouts();
+    }, [selectedDate]);
 
+    const filterWorkouts = () => {
+        return userWorkouts.filter(workout => {
+            const scheduledAt = new Date(workout.scheduledAt);
+            return scheduledAt.toISOString().split('T')[0] === selectedDate.toISOString().split('T')[0];
+        });
+    };
 
     return (
         <View style={styles.container}>
@@ -74,7 +75,7 @@ const WorkoutsScreen = ({ navigation }) => {
                 <TouchableOpacity onPress={() => handleWeekChange(-1)}>
                     <Text style={styles.weekChangeButton}>Previous Week</Text>
                 </TouchableOpacity>
-                <Text style={styles.weekHeading}>{selectedDay} {selectedDate}</Text>
+                <Text style={styles.weekHeading}>{selectedDate.toDateString()}</Text>
                 <TouchableOpacity onPress={() => handleWeekChange(1)}>
                     <Text style={styles.weekChangeButton}>Next Week</Text>
                 </TouchableOpacity>
@@ -84,7 +85,7 @@ const WorkoutsScreen = ({ navigation }) => {
                     <TouchableOpacity
                         key={day.full}
                         style={[styles.day, selectedDay === day.full && styles.selectedDay]}
-                        onPress={() => setSelectedDay(day.full)}
+                        onPress={() => handleDayChange(day.full)}
                     >
                         <Text style={styles.dayText}>{day.short}</Text>
                     </TouchableOpacity>
@@ -104,16 +105,16 @@ const WorkoutsScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.background,
+        backgroundColor: 'white',
     },
     weekContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: 20,
-        backgroundColor: colors.grey,
+        backgroundColor: '#f8f8f8',
         borderBottomWidth: 1,
-        borderBottomColor: colors.background,
+        borderBottomColor: '#eee',
     },
     weekHeading: {
         fontSize: 24,
@@ -121,37 +122,37 @@ const styles = StyleSheet.create({
     },
     weekChangeButton: {
         fontSize: 18,
-        color: colors.mainColor,
+        color: '#007AFF',
     },
     daysContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         padding: 10,
-        backgroundColor: colors.background,
+        backgroundColor: '#f8f8f8',
     },
     day: {
         width: 40,
         height: 40,
-        borderRadius: 10,
-        backgroundColor: colors.secondaryColor,
+        borderRadius: 20,
+        backgroundColor: '#ddd',
         justifyContent: 'center',
         alignItems: 'center',
         marginHorizontal: 5,
     },
     selectedDay: {
-        backgroundColor: colors.mainColor,
+        backgroundColor: '#007AFF',
     },
     dayText: {
-        color: colors.background,
+        color: 'white',
         fontSize: 18,
         fontWeight: 'bold',
     },
     placeholderText: {
         fontSize: 16,
-        color: 'white',
+        color: 'gray',
         textAlign: 'center',
         marginTop: 20,
     },
 });
 
-export default WorkoutsScreen
+export default Workouts;
