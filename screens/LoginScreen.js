@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import httpService from '../services/httpService';
+import bcrypt from "bcryptjs";
 
 const LoginScreen = () => {
     const [username, setUsername] = useState('');
@@ -12,9 +13,11 @@ const LoginScreen = () => {
             Alert.alert('Error', 'Please fill in all fields.');
         } else {
             try {
+                const hashedPassword = await bcrypt.hash(password, 12);
+
                 const response = await httpService.post('/auth/login', {
                     username: username,
-                    password: password
+                    password: hashedPassword
                 });
                 Alert.alert('Success', `Logged in as ${username}`);
                 console.log('Login response:', response.data);
