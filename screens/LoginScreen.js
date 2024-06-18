@@ -3,22 +3,22 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Aler
 import { Icon } from 'react-native-elements';
 import httpService from '../services/httpService';
 
-const SignupScreen = () => {
+const LoginScreen = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
 
-    const handleSignup = async () => {
+    const handleLogin = async () => {
         if (username === '' || password === '') {
             Alert.alert('Error', 'Please fill in all fields.');
         } else {
             try {
-                const response = await httpService.post('/auth/signup', {
+                const response = await httpService.post('/auth/login', {
                     username: username,
                     password: password
                 });
                 Alert.alert('Success', `Logged in as ${username}`);
                 console.log('Login response:', response.data);
+                sessionStorage.setItem('userId', response.data);
             } catch (error) {
                 Alert.alert('Error', `Login failed: ${error.response ? error.response.data : error.message}`);
                 console.error('Login error:', error);
@@ -28,8 +28,8 @@ const SignupScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.signupContainer}>
-                <Text style={styles.signupText}>Signup</Text>
+            <View style={styles.loginContainer}>
+                <Text style={styles.loginText}>Login</Text>
                 <Icon name="user" type="font-awesome" color="white" size={50} />
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Username</Text>
@@ -52,23 +52,12 @@ const SignupScreen = () => {
                         onChangeText={setPassword}
                     />
                 </View>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Confirm Password</Text>
-                    <TextInput
-                        placeholder="Confirm password"
-                        placeholderTextColor="white"
-                        secureTextEntry
-                        style={styles.input}
-                        value={confirmPassword}
-                        onChangeText={setConfirmPassword}
-                    />
-                </View>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.loginButton}>
-                        <Text style={styles.loginText}>Login</Text>
+                    <TouchableOpacity style={styles.signUpButton}>
+                        <Text style={styles.signUpText}>Sign Up</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.signupButton} onPress={handleSignup}>
-                        <Text style={styles.signupButtonText}>Sign Up</Text>
+                    <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+                        <Text style={styles.loginButtonText}>Login</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -83,14 +72,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    signupContainer: {
+    loginContainer: {
         width: '80%',
         backgroundColor: '#555',
         padding: 20,
         borderRadius: 10,
         alignItems: 'center',
     },
-    signupText: {
+    loginText: {
         fontSize: 24,
         color: 'white',
         marginBottom: 20,
@@ -114,7 +103,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         width: '100%',
     },
-    loginButton: {
+    signUpButton: {
         backgroundColor: '#ccc',
         padding: 15,
         borderRadius: 5,
@@ -122,10 +111,10 @@ const styles = StyleSheet.create({
         marginRight: 10,
         alignItems: 'center',
     },
-    loginText: {
+    signUpText: {
         color: 'black',
     },
-    signupButton: {
+    loginButton: {
         backgroundColor: '#00ff00',
         padding: 15,
         borderRadius: 5,
@@ -133,7 +122,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         alignItems: 'center',
     },
-    signupButtonText: {
+    loginButtonText: {
         color: 'white',
     },
     homeContainer: {
@@ -148,4 +137,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SignupScreen;
+export default LoginScreen;
