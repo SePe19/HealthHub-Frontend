@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import httpService from '../services/httpService';
-import colors from '../styles/colors'
-
+import colors from '../styles/colors';
 
 // Icons
 import workoutsArrow from '../assets/workoutIcons/workouts_arrow.png';
@@ -185,12 +184,14 @@ const Workouts = ({ navigation }) => {
             ) : (
                 <Text style={styles.placeholderText}>Please select a day to view workouts</Text>
             )}
-            <TouchableOpacity style={styles.createWorkoutButton} onPress={handleScheduledWorkout}>
-                <Text style={styles.bigButtonText}>Schedule Workouts</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.createWorkoutButton} onPress={handleCreateWorkout}>
-                <Text style={styles.bigButtonText}>Create Workout</Text>
-            </TouchableOpacity>
+            <View style={styles.buttonRow}>
+                <TouchableOpacity style={[styles.createWorkoutButton, styles.halfWidthButton, styles.greyButton]} onPress={handleScheduledWorkout}>
+                    <Text style={styles.bigButtonText}>Schedule Workouts</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.createWorkoutButton, styles.halfWidthButton]} onPress={handleCreateWorkout}>
+                    <Text style={styles.bigButtonText}>Create Workout</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
@@ -270,7 +271,7 @@ const styles = StyleSheet.create({
         margin: 0,
         padding: 0,
         borderRadius: 10,
-        marginTop: '-45vh',
+        marginTop: '-38vh',
         marginBottom: '2vh',
         overflow:"scroll",
     },
@@ -303,7 +304,7 @@ const styles = StyleSheet.create({
     workoutIcon: {
         width: 50,
         height: 50,
-        marginRight: 10, // Adjust as needed
+        marginRight: 10,
     },
     expandedContent: {
         marginTop: 10,
@@ -352,21 +353,31 @@ const styles = StyleSheet.create({
         paddingHorizontal:'auto',
         paddingVertical:20,
         margin: "auto",
-        width: '100%',
         display: 'flex',
         justifyContent:"center",
         alignItems: "center",
         borderRadius: 10,
     },
+    halfWidthButton: {
+        width: '48%',
+    },
+    buttonRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginVertical: 10,
+    },
     bigButtonText: {
         color:colors.darkGrey,
         fontWeight:500,
-        fontSize: 20,
+        fontSize: 18,
     },
     smallButtonText: {
         color:colors.darkGrey,
         fontWeight:400,
         fontSize: 20,
+    },
+    greyButton:{
+        backgroundColor:colors.secondaryColor,
     },
 });
 
