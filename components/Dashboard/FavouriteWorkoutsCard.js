@@ -67,11 +67,12 @@ function FavouriteWorkoutsCard() {
 const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         backgroundColor: colors.grey,
         marginLeft: 10,
         marginRight: 10,
-        height: 300
+        height: 300,
+        padding:20,
     },
     row: {
         flexDirection: 'row',
@@ -79,12 +80,12 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     text: {
-        fontSize: 18,
+        fontSize: 30,
         color: colors.textPrimary
     },
     icon: {
-        width: 24,
-        height: 24,
+        width: 40,
+        height: 40,
         marginRight: 10,
     },
 });
