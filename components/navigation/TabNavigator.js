@@ -1,9 +1,10 @@
+// TabNavigator.js
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet, Image } from 'react-native';
 import HomeScreen from '../../screens/HomeScreen';
 import DashboardScreen from '../../screens/DashboardScreen';
-import WorkoutsScreen from '../../screens/WorkoutsScreen';
+import WorkoutsNavigator from './WorkoutsNavigator'; // Updated import
 import colors from '../../styles/colors';
 
 // Import your custom icon files
@@ -31,9 +32,9 @@ const TabNavigator = () => {
                         iconSource = WorkoutsIcon;
                     }
 
-                    // Set a larger size for the 'Dashboard' icon
+                    // Set a larger size for the 'Workouts' icon
                     if (route.name === 'Workouts') {
-                        iconSize = size + 30; // Increase size by 8 units
+                        iconSize = size + 30; // Increase size by 30 units
                     }
 
                     // Return the custom icon component
@@ -68,7 +69,7 @@ const TabNavigator = () => {
             />
             <Tab.Screen
                 name="Workouts"
-                component={WorkoutsScreen}
+                component={WorkoutsNavigator} // Updated to use the stack navigator
                 options={{
                     headerShown: false, // Hide the default header
                 }}
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     },
     label: {
         fontSize: 15,
-        fontWeight: 400,
+        fontWeight: '400',
     },
 });
 
