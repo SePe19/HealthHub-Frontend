@@ -3,17 +3,25 @@ import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import colors from '../../styles/colors'
 
+const logout = () => {
+    sessionStorage.clear()
+}
+
 const Header = () => {
     return (
         <View style={styles.headerContainer}>
             <View style={styles.textContainer}>
-                <Text style={styles.nameText}>John Doe</Text>
-                <Text style={styles.welcomeText}>insert bane quote here</Text>
+                {sessionStorage.getItem('userId') ? (
+                    <Text style={styles.nameText}>welcome user</Text>
+                ):(
+                    <Text>please login</Text>
+                    )}
             </View>
             <Image
-                source={require('../../assets/profile.png')} // path to your local image
+                source={require('../../assets/profile.png')}
                 style={styles.profileIcon}
             />
+            <button onClick={logout}>Logout</button>
         </View>
     );
 };

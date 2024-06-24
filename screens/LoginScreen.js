@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Alert } from 'react-native';
-import { Icon } from 'react-native-elements';
 import httpService from '../services/httpService';
 
 const LoginScreen = () => {
@@ -12,13 +11,14 @@ const LoginScreen = () => {
             Alert.alert('Error', 'Please fill in all fields.');
         } else {
             try {
-                const response = await httpService.post('/auth/login', {
+                const response = await httpService.post('/user/login', {
                     username: username,
                     password: password
                 });
                 Alert.alert('Success', `Logged in as ${username}`);
                 console.log('Login response:', response.data);
                 sessionStorage.setItem('userId', response.data);
+
             } catch (error) {
                 Alert.alert('Error', `Login failed: ${error.response ? error.response.data : error.message}`);
                 console.error('Login error:', error);
@@ -30,7 +30,6 @@ const LoginScreen = () => {
         <SafeAreaView style={styles.container}>
             <View style={styles.loginContainer}>
                 <Text style={styles.loginText}>Login</Text>
-                <Icon name="user" type="font-awesome" color="white" size={50} />
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Username</Text>
                     <TextInput
@@ -53,7 +52,7 @@ const LoginScreen = () => {
                     />
                 </View>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.signUpButton}>
+                    <TouchableOpacity style={styles.signUpButton} onPress={() => navigation.navigate('SignUp')}>
                         <Text style={styles.signUpText}>Sign Up</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
@@ -124,16 +123,6 @@ const styles = StyleSheet.create({
     },
     loginButtonText: {
         color: 'white',
-    },
-    homeContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        position: 'absolute',
-        bottom: 20,
-    },
-    homeText: {
-        color: '#00ff00',
-        marginLeft: 10,
     },
 });
 

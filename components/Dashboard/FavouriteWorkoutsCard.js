@@ -10,8 +10,7 @@ import mobilityIcon from '../../assets/workoutIcons/mobility.png';
 import cardioIcon from '../../assets/workoutIcons/cardio.png';
 
 async function getUserStats() {
-    const userId = '1';
-    const favouriteUrl = `user/${userId}/workout-favourite`;
+    const favouriteUrl = `user/${sessionStorage.getItem('userId')}/workout-favourite`;
     const favouriteData = await httpService.get(favouriteUrl);
     const favData = {
         strength_workouts: favouriteData.data.STRENGTH,
@@ -42,11 +41,11 @@ function FavouriteWorkoutsCard() {
     const getIconSource = (key) => {
         switch (key) {
             case 'strength_workouts':
-                return strengthIcon;  // Icon for strength
+                return strengthIcon;
             case 'mobility_workouts':
-                return mobilityIcon;  // Icon for mobility
+                return mobilityIcon;
             case 'cardio_workouts':
-                return cardioIcon;    // Icon for cardio
+                return cardioIcon;
             default:
                 return null;
         }

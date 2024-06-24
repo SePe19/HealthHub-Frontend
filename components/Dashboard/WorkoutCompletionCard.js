@@ -5,9 +5,8 @@ import colors from '../../styles/colors';
 import PercentageCircle from 'react-native-percentage-circle';
 
 async function getUserStats() {
-    const userId = '1';
     const completionDaysAmount = 91;
-    const completionUrl = `user/${userId}/workout-completion`;
+    const completionUrl = `user/${sessionStorage.getItem('userId')}/workout-completion`;
     try {
         const completionData = await httpService.get(completionUrl, {
             params: {

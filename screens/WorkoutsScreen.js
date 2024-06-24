@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
-import Header from '../components/common/Header'
-import UserWorkout from '../components/UserWorkout.js';
 import httpService from '../services/httpService';
 import colors from '../styles/colors'
 
 
-// Import your local PNG images
+// Icons
 import workoutsArrow from '../assets/workoutIcons/workouts_arrow.png';
 import strengthIcon from '../assets/workoutIcons/strength.png';
 import cardioIcon from '../assets/workoutIcons/cardio.png';
@@ -19,14 +17,15 @@ const Workouts = ({ navigation }) => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedDay, setSelectedDay] = useState('');
     const [expandedWorkoutId, setExpandedWorkoutId] = useState(null);
-    const userWorkoutsURL = 'user/2/scheduled-workouts-for-week';
+    const userWorkoutsURL = `user/${sessionStorage.getItem('userId')}/scheduled-workouts-for-week`;
 
     const handleCreateWorkout = () => {
         navigation.navigate('CreateWorkoutScreen', { date: selectedDate });
     };
 
-    //const username = 'John Doe';
-   //const motivationalQuote = 'Stay motivated!';
+    const handleScheduledWorkout = () => {
+        navigation.navigate('ScheduleWorkoutScreen');
+    };
 
     const days = [
         { short: 'M', full: 'Monday' },
@@ -76,7 +75,7 @@ const Workouts = ({ navigation }) => {
     const getWorkoutsForDay = (dayIndex) => {
         return userWorkouts.filter(workout => {
             const scheduledAt = new Date(workout.scheduledAt);
-            const workoutDayIndex = (scheduledAt.getDay() + 6) % 7; // Adjust to match Monday as the start of the week
+            const workoutDayIndex = (scheduledAt.getDay() + 6) % 7;
             return workoutDayIndex === dayIndex;
         });
     };
@@ -94,7 +93,7 @@ const Workouts = ({ navigation }) => {
             case 'mobility':
                 return mobilityIcon;
             default:
-                return null; // or a default icon
+                return null;
         }
     };
 
@@ -186,6 +185,9 @@ const Workouts = ({ navigation }) => {
             ) : (
                 <Text style={styles.placeholderText}>Please select a day to view workouts</Text>
             )}
+            <TouchableOpacity style={styles.createWorkoutButton} onPress={handleScheduledWorkout}>
+                <Text style={styles.bigButtonText}>Schedule Workouts</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.createWorkoutButton} onPress={handleCreateWorkout}>
                 <Text style={styles.bigButtonText}>Create Workout</Text>
             </TouchableOpacity>
@@ -311,7 +313,7 @@ const styles = StyleSheet.create({
     },
     exercisesContainer: {
         flex: 1,
-        marginRight: 16, // Adjust margin as needed
+        marginRight: 16,
     },
     exerciseRow: {
         flexDirection: 'row',

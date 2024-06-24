@@ -1,27 +1,31 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Alert } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { useNavigation } from "@react-navigation/native";
 import httpService from '../services/httpService';
 
 const SignupScreen = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const navigation = useNavigation();
 
     const handleSignup = async () => {
-        if (username === '' || password === '') {
+        if (username === '' || password === '' || confirmPassword === '') {
             Alert.alert('Error', 'Please fill in all fields.');
+        } else if (password !== confirmPassword) {
+            Alert.alert('Error', 'Passwords do not match.');
         } else {
             try {
-                const response = await httpService.post('/auth/signup', {
+                const response = await httpService.post('/user/signup', {
                     username: username,
                     password: password
                 });
-                Alert.alert('Success', `Logged in as ${username}`);
-                console.log('Login response:', response.data);
+                Alert.alert('Success', `Signed up as ${username}`);
+                console.log('Signup response:', response.data);
+                navigation.navigate('Login');
             } catch (error) {
-                Alert.alert('Error', `Login failed: ${error.response ? error.response.data : error.message}`);
-                console.error('Login error:', error);
+                Alert.alert('Error', `Signup failed: ${error.response ? error.response.data : error.message}`);
+                console.error('Signup error:', error);
             }
         }
     };
@@ -30,7 +34,6 @@ const SignupScreen = () => {
         <SafeAreaView style={styles.container}>
             <View style={styles.signupContainer}>
                 <Text style={styles.signupText}>Signup</Text>
-                <Icon name="user" type="font-awesome" color="white" size={50} />
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Username</Text>
                     <TextInput
@@ -64,7 +67,7 @@ const SignupScreen = () => {
                     />
                 </View>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.loginButton}>
+                    <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Login')}>
                         <Text style={styles.loginText}>Login</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.signupButton} onPress={handleSignup}>
@@ -135,16 +138,6 @@ const styles = StyleSheet.create({
     },
     signupButtonText: {
         color: 'white',
-    },
-    homeContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        position: 'absolute',
-        bottom: 20,
-    },
-    homeText: {
-        color: '#00ff00',
-        marginLeft: 10,
     },
 });
 
