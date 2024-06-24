@@ -10,7 +10,7 @@ const Workouts = ({ navigation }) => {
     const [error, setError] = useState(null);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedDay, setSelectedDay] = useState('');
-    const userWorkoutsURL = 'user/1/scheduled-workouts-for-week';
+    const userWorkoutsURL = 'user/2/scheduled-workouts-for-week';
 
     const handleCreateWorkout = () => {
         navigation.navigate('CreateWorkout', { date: selectedDate });
@@ -31,8 +31,10 @@ const Workouts = ({ navigation }) => {
 
     const handleDayChange = (day) => {
         const dayIndex = days.findIndex(d => d.full === day);
+        const todayIndex = selectedDate.getDay() === 0 ? 6 : selectedDate.getDay() - 1;
+        const diff = dayIndex - todayIndex;
         const newDate = new Date(selectedDate);
-        newDate.setDate(newDate.getDate() + (dayIndex - newDate.getDay() + 1));
+        newDate.setDate(selectedDate.getDate() + diff);
         setSelectedDate(newDate);
         setSelectedDay(day);
     };
@@ -48,11 +50,12 @@ const Workouts = ({ navigation }) => {
         const fetchUserWorkouts = async () => {
             try {
                 const { data } = await httpService.get(userWorkoutsURL, {
-                    params: {date: selectedDate}
+                    params: { date: selectedDate }
                 });
                 setUserWorkouts(data);
                 setLoading(false);
                 console.log(data, "This is our user workout data");
+                //update
             } catch (error) {
                 setError('Error fetching user workouts. Please try again later.');
                 setLoading(false);
@@ -61,11 +64,35 @@ const Workouts = ({ navigation }) => {
         fetchUserWorkouts();
     }, [selectedDate]);
 
-    const filterWorkouts = () => {
+    const getWorkoutsForDay = (dayIndex) => {
         return userWorkouts.filter(workout => {
             const scheduledAt = new Date(workout.scheduledAt);
-            return scheduledAt.toISOString().split('T')[0] === selectedDate.toISOString().split('T')[0];
+            const workoutDayIndex = (scheduledAt.getDay() + 6) % 7; // Adjust to match Monday as the start of the week
+            return workoutDayIndex === dayIndex;
         });
+    };
+
+    const renderSelectedDayWorkouts = () => {
+        const dayIndex = days.findIndex(d => d.full === selectedDay);
+        const workoutsForDay = getWorkoutsForDay(dayIndex);
+
+        return (
+            <View style={styles.workoutsContainer}>
+                {workoutsForDay.map((workout, index) => (
+                    <TouchableOpacity
+                        key={index}
+                        style={[
+                            styles.workoutDiv,
+                            workout.completed ? styles.completedWorkout : styles.notCompletedWorkout
+                        ]}
+                        onPress={() => alert(`Workout: ${workout.name}\nTime: ${new Date(workout.scheduledAt).toLocaleTimeString()}`)}
+                    >
+                        <Text style={styles.workoutText}>Workout: {workout.name}</Text>
+                        <Text style={styles.workoutText}>Time: {new Date(workout.scheduledAt).toLocaleTimeString()}</Text>
+                    </TouchableOpacity>
+                ))}
+            </View>
+        );
     };
 
     return (
@@ -81,18 +108,32 @@ const Workouts = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
             <ScrollView horizontal contentContainerStyle={styles.daysContainer}>
-                {days.map(day => (
-                    <TouchableOpacity
-                        key={day.full}
-                        style={[styles.day, selectedDay === day.full && styles.selectedDay]}
-                        onPress={() => handleDayChange(day.full)}
-                    >
-                        <Text style={styles.dayText}>{day.short}</Text>
-                    </TouchableOpacity>
+                {days.map((day, index) => (
+                    <View key={day.full} style={styles.dayContainer}>
+                        <TouchableOpacity
+                            style={[styles.day, selectedDay === day.full && styles.selectedDay]}
+                            onPress={() => handleDayChange(day.full)}
+                        >
+                            <Text style={styles.dayText}>{day.short}</Text>
+                        </TouchableOpacity>
+                        {getWorkoutsForDay(index).map((workout, workoutIndex) => (
+                            <View
+                                key={workoutIndex}
+                                style={[
+                                    styles.divContent,
+                                    workout.completed ? styles.completedWorkout : styles.notCompletedWorkout
+                                ]}
+                            >
+                                <Text>Workout: {workout.name}</Text>
+                                <Text>Time: {new Date(workout.scheduledAt).toLocaleTimeString()}</Text>
+                                {/* Add more content or components here */}
+                            </View>
+                        ))}
+                    </View>
                 ))}
             </ScrollView>
             {selectedDay ? (
-                <UserWorkout user_workouts={filterWorkouts()} />
+                renderSelectedDayWorkouts()
             ) : (
                 <Text style={styles.placeholderText}>Please select a day to view workouts</Text>
             )}
@@ -105,53 +146,75 @@ const Workouts = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        padding: 16,
     },
     weekContainer: {
         flexDirection: 'row',
-        alignItems: 'center',
         justifyContent: 'space-between',
-        padding: 20,
-        backgroundColor: '#f8f8f8',
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-    },
-    weekHeading: {
-        fontSize: 24,
-        fontWeight: 'bold',
+        alignItems: 'center',
+        marginBottom: 16,
     },
     weekChangeButton: {
+        fontSize: 16,
+        color: 'blue',
+    },
+    weekHeading: {
         fontSize: 18,
-        color: '#007AFF',
+        fontWeight: 'bold',
     },
     daysContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
-        padding: 10,
-        backgroundColor: '#f8f8f8',
+        marginBottom: 16,
+    },
+    dayContainer: {
+        alignItems: 'center',
+        marginHorizontal: 8,
     },
     day: {
-        width: 40,
-        height: 40,
+        padding: 10,
         borderRadius: 20,
-        backgroundColor: '#ddd',
-        justifyContent: 'center',
+        backgroundColor: '#eee',
+        width: 40,
         alignItems: 'center',
-        marginHorizontal: 5,
     },
     selectedDay: {
-        backgroundColor: '#007AFF',
+        backgroundColor: 'lightblue',
     },
     dayText: {
-        color: 'white',
         fontSize: 18,
         fontWeight: 'bold',
     },
+    divContent: {
+        marginTop: 8,
+        padding: 10,
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    completedWorkout: {
+        backgroundColor: 'lightgreen',
+    },
+    notCompletedWorkout: {
+        backgroundColor: 'lightcoral',
+    },
     placeholderText: {
-        fontSize: 16,
-        color: 'gray',
         textAlign: 'center',
-        marginTop: 20,
+        marginVertical: 20,
+        fontSize: 16,
+        color: '#888',
+    },
+    workoutsContainer: {
+        marginTop: 16,
+        padding: 16,
+        backgroundColor: '#f5f5f5',
+        borderRadius: 10,
+    },
+    workoutDiv: {
+        padding: 10,
+        borderRadius: 10,
+        marginBottom: 10,
+    },
+    workoutText: {
+        fontSize: 16,
     },
 });
 
