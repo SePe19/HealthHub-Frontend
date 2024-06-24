@@ -10,10 +10,11 @@ const Workouts = ({ navigation }) => {
     const [error, setError] = useState(null);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedDay, setSelectedDay] = useState('');
+    const [expandedWorkoutId, setExpandedWorkoutId] = useState(null);
     const userWorkoutsURL = 'user/2/scheduled-workouts-for-week';
 
     const handleCreateWorkout = () => {
-        navigation.navigate('CreateWorkoutScreen', { date: selectedDate });
+        navigation.navigate('CreateWorkout', { date: selectedDate });
     };
 
     const username = 'John Doe';
@@ -72,6 +73,10 @@ const Workouts = ({ navigation }) => {
         });
     };
 
+    const toggleWorkoutDetails = (workoutId) => {
+        setExpandedWorkoutId(expandedWorkoutId === workoutId ? null : workoutId);
+    };
+
     const renderSelectedDayWorkouts = () => {
         const dayIndex = days.findIndex(d => d.full === selectedDay);
         const workoutsForDay = getWorkoutsForDay(dayIndex);
@@ -79,17 +84,35 @@ const Workouts = ({ navigation }) => {
         return (
             <View style={styles.workoutsContainer}>
                 {workoutsForDay.map((workout, index) => (
-                    <TouchableOpacity
+                    <View
                         key={index}
                         style={[
                             styles.workoutDiv,
                             workout.completed ? styles.completedWorkout : styles.notCompletedWorkout
                         ]}
-                        onPress={() => alert(`Workout: ${workout.name}\nTime: ${new Date(workout.scheduledAt).toLocaleTimeString()}`)}
                     >
-                        <Text style={styles.workoutText}>Workout: {workout.name}</Text>
-                        <Text style={styles.workoutText}>Time: {new Date(workout.scheduledAt).toLocaleTimeString()}</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity onPress={() => toggleWorkoutDetails(workout.id)}>
+                            <Text style={styles.workoutText}>Workout: {workout.name}</Text>
+                            <Text style={styles.workoutText}>Time: {new Date(workout.scheduledAt).toLocaleTimeString()}</Text>
+                        </TouchableOpacity>
+                        {expandedWorkoutId === workout.id && (
+                            <View style={styles.expandedContent}>
+                                <View style={styles.exercisesContainer}>
+                                    {workout.workout.workoutHasExercises.map((exercise, idx) => (
+                                        <View key={idx} style={styles.exerciseContainer}>
+                                            <Text style={styles.exerciseText}>
+                                                {exercise.name} - Sets: {exercise.sets}, Reps: {exercise.repetitions}
+                                            </Text>
+                                        </View>
+                                    ))}
+                                </View>
+                                <View style={styles.buttonsContainer}>
+                                    <Button title="Edit Workout" onPress={() => alert(`Edit workout: ${workout.name}`)} />
+                                    <Button title="Play Workout" onPress={() => alert(`Play workout: ${workout.name}`)} />
+                                </View>
+                            </View>
+                        )}
+                    </View>
                 ))}
             </View>
         );
@@ -215,6 +238,24 @@ const styles = StyleSheet.create({
     },
     workoutText: {
         fontSize: 16,
+    },
+    expandedContent: {
+        marginTop: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    exercisesContainer: {
+        flex: 1,
+        marginRight: 10,
+    },
+    exerciseText: {
+        fontSize: 14,
+        marginBottom: 5,
+    },
+    buttonsContainer: {
+        flexDirection: 'column',
+        justifyContent: 'center',
     },
 });
 
