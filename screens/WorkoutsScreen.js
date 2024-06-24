@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
-import Header from '../components/Header.js';
+import Header from '../components/common/Header'
 import UserWorkout from '../components/UserWorkout.js';
 import httpService from '../services/httpService';
 import colors from '../styles/colors'
+
 
 // Import your local PNG images
 import workoutsArrow from '../assets/workoutIcons/workouts_arrow.png';
@@ -24,8 +25,8 @@ const Workouts = ({ navigation }) => {
         navigation.navigate('CreateWorkoutScreen', { date: selectedDate });
     };
 
-    const username = 'John Doe';
-    const motivationalQuote = 'Stay motivated!';
+    //const username = 'John Doe';
+   //const motivationalQuote = 'Stay motivated!';
 
     const days = [
         { short: 'M', full: 'Monday' },
@@ -103,6 +104,7 @@ const Workouts = ({ navigation }) => {
 
         return (
             <View style={styles.workoutsContainer}>
+
                 {workoutsForDay.map((workout, index) => (
                     <View
                         key={index}
@@ -149,7 +151,6 @@ const Workouts = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Header username={username} motivationalQuote={motivationalQuote} />
             <View style={styles.weekContainer}>
                 <TouchableOpacity onPress={() => handleWeekChange(-1)}>
                     <Text style={styles.weekChangeButton}>←</Text>

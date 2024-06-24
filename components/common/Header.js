@@ -1,52 +1,51 @@
-import React from 'react'
-import { View, Text, Image, StyleSheet } from 'react-native'
+// Header.js
+import React from 'react';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import colors from '../../styles/colors'
 
-const Header = ({ profilePicture, username, motivationalQuote }) => {
+const Header = () => {
     return (
-        <View style={styles.header}>
-            <View style={styles.profileContainer}>
-                <Text style={styles.username}>{username}</Text>
-                <Text style={styles.motivationalQuote}>{motivationalQuote}</Text>
+        <View style={styles.headerContainer}>
+            <View style={styles.textContainer}>
+                <Text style={styles.nameText}>John Doe</Text>
+                <Text style={styles.welcomeText}>insert bane quote here</Text>
             </View>
-            <Image source={{ uri: profilePicture }} style={styles.profilePicture} />
+            <Image
+                source={require('../../assets/profile.png')} // path to your local image
+                style={styles.profileIcon}
+            />
         </View>
-    )
-}
+    );
+};
 
-const styles= StyleSheet.create({
-    header: {
+const styles = StyleSheet.create({
+    headerContainer: {
         flexDirection: 'row',
-        alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: colors.lightGrey,
-        padding: 20,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-    },
-    profileContainer: {
-        flexDirection: 'column',
         alignItems: 'center',
+        padding: 20,
+        backgroundColor: colors.lightGrey,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.lightGrey,
     },
-    leftContainer: {
-        flex: 1,
-        marginRight: 10,
+    textContainer: {
+        flexDirection: 'column',
     },
-    profilePicture: {
+    welcomeText: {
+        fontSize: 12,
+        color: colors.white,
+        fontWeight: 400,
+    },
+    nameText: {
+        fontSize: 18,
+        fontWeight: 500,
+        color: colors.white,
+    },
+    profileIcon: {
         width: 40,
         height: 40,
         borderRadius: 20,
     },
-    username: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginBottom: 5,
-    },
-    motivationalQuote: {
-        fontSize: 14,
-        fontStyle: 'italic',
-        color: 'gray',
-    },
-})
+});
 
 export default Header;

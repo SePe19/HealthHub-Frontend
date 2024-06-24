@@ -29,10 +29,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         backgroundColor: colors.grey,
-        marginTop: 20,
-        paddingVertical: 10,
+        marginTop: 0,
+        paddingVertical: 0,
         marginRight: 10,
-        borderRadius: 40,
+        borderRadius: 20,
     },
     menuItem: {
         alignItems: 'center',
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     menuItemSelected: {
         backgroundColor: colors.darkGrey,
         borderRadius: 10,
+        margin: 10,
     },
     menuText: {
         color: 'white',

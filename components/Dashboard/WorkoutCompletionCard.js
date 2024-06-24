@@ -68,21 +68,27 @@ const styles = StyleSheet.create({
         backgroundColor: colors.grey,
         marginLeft: 10,
         marginRight: 10,
-        height: 300
+        height: 300,
+        padding:20,
     },
     column: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        margin: 0,
+        margin: 10,
     },
     text: {
-        fontSize: 18,
+        fontSize: 16,
+        fontWeight: 400,
+        margin: 5,
         color: 'white',
+        textAlign: 'left',
+        padding: 'auto',
     },
     completedNum: {
-        fontSize: 60,
+        fontSize: 100,
         color: colors.mainColor,
+        marginTop: 20,
     }
 });
 
