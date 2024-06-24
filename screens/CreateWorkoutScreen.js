@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Picker, FlatList } from 'rea
 import httpService from "../services/httpService";
 
 const CreateWorkout = () => {
+    const userId = sessionStorage.getItem('userId');
     const workoutTypesURL = 'workout/workout-types';
     const muscleGroupsURL = 'exercise/muscle-groups';
     const exercisesByMuscleGroupURL = 'exercise/exercises-by-muscle-group';
@@ -79,7 +80,7 @@ const CreateWorkout = () => {
                 workoutType,
                 workoutHasExercises: selectedExercises
             }, {
-                params: { userId: 1 }
+                params: { userId:userId }
             });
 
             setTitle('');

@@ -104,7 +104,7 @@ const ScheduleWorkoutScreen = () => {
             )}
             <DateTimeInput
                 value={scheduledAt}
-                onChange={setScheduledAt}
+                onDateChange={setScheduledAt}
             />
             {error && <Text style={styles.error}>{error}</Text>}
             <Button title="Schedule Workout" onPress={handleSubmit} disabled={!selectedWorkout} />
