@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Button } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Button, Image } from 'react-native';
 import Header from '../components/Header.js';
 import UserWorkout from '../components/UserWorkout.js';
 import httpService from '../services/httpService';
+
+// Import your local PNG images
+import workoutsArrow from '../assets/workoutIcons/workouts_arrow.png';
+import strengthIcon from '../assets/workoutIcons/strength.png';
+import cardioIcon from '../assets/workoutIcons/cardio.png';
+import mobilityIcon from '../assets/workoutIcons/mobility.png';
 
 const Workouts = ({ navigation }) => {
     const [userWorkouts, setUserWorkouts] = useState([]);
@@ -77,6 +83,19 @@ const Workouts = ({ navigation }) => {
         setExpandedWorkoutId(expandedWorkoutId === workoutId ? null : workoutId);
     };
 
+    const getWorkoutIcon = (workoutType) => {
+        switch (workoutType.toLowerCase()) {
+            case 'strength':
+                return strengthIcon;
+            case 'cardio':
+                return cardioIcon;
+            case 'mobility':
+                return mobilityIcon;
+            default:
+                return null; // or a default icon
+        }
+    };
+
     const renderSelectedDayWorkouts = () => {
         const dayIndex = days.findIndex(d => d.full === selectedDay);
         const workoutsForDay = getWorkoutsForDay(dayIndex);
@@ -92,17 +111,22 @@ const Workouts = ({ navigation }) => {
                         ]}
                     >
                         <TouchableOpacity onPress={() => toggleWorkoutDetails(workout.id)}>
-                            <Text style={styles.workoutText}>Workout: {workout.name}</Text>
-                            <Text style={styles.workoutText}>Time: {new Date(workout.scheduledAt).toLocaleTimeString()}</Text>
+                            <View style={styles.workoutHeader}>
+                                <Image source={getWorkoutIcon(workout.workout.workoutType)} style={styles.workoutIcon} />
+                                <Text style={styles.workoutHeaderText}>{workout.workout.title}</Text>
+                                <Image
+                                    source={workoutsArrow}
+                                    style={[styles.arrow, expandedWorkoutId === workout.id && styles.rotateArrow]}
+                                />
+                            </View>
                         </TouchableOpacity>
                         {expandedWorkoutId === workout.id && (
                             <View style={styles.expandedContent}>
                                 <View style={styles.exercisesContainer}>
                                     {workout.workout.workoutHasExercises.map((exercise, idx) => (
-                                        <View key={idx} style={styles.exerciseContainer}>
-                                            <Text style={styles.exerciseText}>
-                                                {exercise.name} - Sets: {exercise.sets}, Reps: {exercise.repetitions}
-                                            </Text>
+                                        <View key={idx} style={styles.exerciseRow}>
+                                            <Text style={styles.exerciseTitle}>{exercise.exercise.title}</Text>
+                                            <Text style={styles.exerciseSets}>{exercise.sets}x{exercise.repetitions}</Text>
                                         </View>
                                     ))}
                                 </View>
@@ -236,26 +260,51 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 10,
     },
-    workoutText: {
+    workoutHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    workoutHeaderText: {
         fontSize: 16,
+    },
+    arrow: {
+        width: 20,
+        height: 20,
+    },
+    rotateArrow: {
+        transform: [{ rotate: '90deg' }],
+    },
+    workoutIcon: {
+        width: 30,
+        height: 30,
+        marginRight: 10, // Adjust as needed
     },
     expandedContent: {
         marginTop: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'flex-start',
     },
     exercisesContainer: {
         flex: 1,
-        marginRight: 10,
+        marginRight: 16, // Adjust margin as needed
     },
-    exerciseText: {
+    exerciseRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    exerciseTitle: {
         fontSize: 14,
-        marginBottom: 5,
+        marginBottom: 4,
+    },
+    exerciseSets: {
+        fontSize: 14,
+        marginBottom: 4,
     },
     buttonsContainer: {
         flexDirection: 'column',
-        justifyContent: 'center',
+        alignSelf: 'end',
     },
 });
 
