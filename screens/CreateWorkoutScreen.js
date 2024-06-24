@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { SelectList } from "react-native-dropdown-select-list";
 import httpService from "../services/httpService";
 
-const CreateWorkout = () => {
+const CreateWorkoutScreen = () => {
     const workoutTypesURL = 'workout/workout-types'
     const createUserWorkoutURL = 'workout/'
     const [title, setTitle] = useState('');
@@ -110,4 +110,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default CreateWorkout;
+export default CreateWorkoutScreen;

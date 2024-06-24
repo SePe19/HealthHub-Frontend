@@ -13,7 +13,7 @@ const Workouts = ({ navigation }) => {
     const userWorkoutsURL = 'user/2/scheduled-workouts-for-week';
 
     const handleCreateWorkout = () => {
-        navigation.navigate('CreateWorkout', { date: selectedDate });
+        navigation.navigate('CreateWorkoutScreen', { date: selectedDate });
     };
 
     const username = 'John Doe';
