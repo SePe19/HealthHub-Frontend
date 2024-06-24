@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Button, Image } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import Header from '../components/Header.js';
 import UserWorkout from '../components/UserWorkout.js';
 import httpService from '../services/httpService';
+import colors from '../styles/colors'
 
 // Import your local PNG images
 import workoutsArrow from '../assets/workoutIcons/workouts_arrow.png';
@@ -20,7 +21,7 @@ const Workouts = ({ navigation }) => {
     const userWorkoutsURL = 'user/2/scheduled-workouts-for-week';
 
     const handleCreateWorkout = () => {
-        navigation.navigate('CreateWorkout', { date: selectedDate });
+        navigation.navigate('CreateWorkoutScreen', { date: selectedDate });
     };
 
     const username = 'John Doe';
@@ -107,7 +108,7 @@ const Workouts = ({ navigation }) => {
                         key={index}
                         style={[
                             styles.workoutDiv,
-                            workout.completed ? styles.completedWorkout : styles.notCompletedWorkout
+                            workout.completed
                         ]}
                     >
                         <TouchableOpacity onPress={() => toggleWorkoutDetails(workout.id)}>
@@ -131,8 +132,12 @@ const Workouts = ({ navigation }) => {
                                     ))}
                                 </View>
                                 <View style={styles.buttonsContainer}>
-                                    <Button title="Edit Workout" onPress={() => alert(`Edit workout: ${workout.name}`)} />
-                                    <Button title="Play Workout" onPress={() => alert(`Play workout: ${workout.name}`)} />
+                                    <TouchableOpacity style={styles.editWorkoutButton} onPress={() => alert(`Edit workout: ${workout.name}`)}>
+                                        <Text styles={styles.smallButtonText}>Edit Workout</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.playWorkoutButton} onPress={() => alert(`Play workout: ${workout.name}`)}>
+                                        <Text styles={styles.smallButtonText}>Play Workout</Text>
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         )}
@@ -147,11 +152,11 @@ const Workouts = ({ navigation }) => {
             <Header username={username} motivationalQuote={motivationalQuote} />
             <View style={styles.weekContainer}>
                 <TouchableOpacity onPress={() => handleWeekChange(-1)}>
-                    <Text style={styles.weekChangeButton}>Previous Week</Text>
+                    <Text style={styles.weekChangeButton}>←</Text>
                 </TouchableOpacity>
                 <Text style={styles.weekHeading}>{selectedDate.toDateString()}</Text>
                 <TouchableOpacity onPress={() => handleWeekChange(1)}>
-                    <Text style={styles.weekChangeButton}>Next Week</Text>
+                    <Text style={styles.weekChangeButton}>→</Text>
                 </TouchableOpacity>
             </View>
             <ScrollView horizontal contentContainerStyle={styles.daysContainer}>
@@ -170,11 +175,7 @@ const Workouts = ({ navigation }) => {
                                     styles.divContent,
                                     workout.completed ? styles.completedWorkout : styles.notCompletedWorkout
                                 ]}
-                            >
-                                <Text>Workout: {workout.name}</Text>
-                                <Text>Time: {new Date(workout.scheduledAt).toLocaleTimeString()}</Text>
-                                {/* Add more content or components here */}
-                            </View>
+                            ></View>
                         ))}
                     </View>
                 ))}
@@ -184,8 +185,9 @@ const Workouts = ({ navigation }) => {
             ) : (
                 <Text style={styles.placeholderText}>Please select a day to view workouts</Text>
             )}
-            <Text>Workouts Page</Text>
-            <Button title="Create Workout" onPress={handleCreateWorkout} />
+            <TouchableOpacity style={styles.createWorkoutButton} onPress={handleCreateWorkout}>
+                <Text style={styles.bigButtonText}>Create Workout</Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -194,90 +196,110 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+        backgroundColor: colors.background,
     },
     weekContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        margin: "auto",
         marginBottom: 16,
     },
+
     weekChangeButton: {
-        fontSize: 16,
-        color: 'blue',
+        fontSize: 60,
+        color: colors.white,
+        padding: 20,
     },
     weekHeading: {
         fontSize: 18,
         fontWeight: 'bold',
+        color:colors.white,
     },
     daysContainer: {
         flexDirection: 'row',
         marginBottom: 16,
+        width: '100%',
     },
     dayContainer: {
         alignItems: 'center',
-        marginHorizontal: 8,
+        marginHorizontal: 'auto',
     },
     day: {
-        padding: 10,
-        borderRadius: 20,
-        backgroundColor: '#eee',
+        padding: 0,
+        borderRadius: 8,
+        backgroundColor: colors.secondaryColor,
+        height: 40,
         width: 40,
         alignItems: 'center',
+        justifyContent: 'center',
+
     },
     selectedDay: {
-        backgroundColor: 'lightblue',
+        backgroundColor: colors.mainColor,
     },
     dayText: {
         fontSize: 18,
-        fontWeight: 'bold',
+        fontWeight: 500,
+        color: colors.darkGrey,
     },
     divContent: {
         marginTop: 8,
-        padding: 10,
+        width: 40,
+        height: 10,
         borderRadius: 10,
         alignItems: 'center',
     },
     completedWorkout: {
-        backgroundColor: 'lightgreen',
+        backgroundColor: colors.mainColor,
     },
     notCompletedWorkout: {
-        backgroundColor: 'lightcoral',
+        backgroundColor: colors.gold,
     },
     placeholderText: {
         textAlign: 'center',
         marginVertical: 20,
         fontSize: 16,
-        color: '#888',
+        color: colors.secondaryColor,
     },
     workoutsContainer: {
-        marginTop: 16,
-        padding: 16,
-        backgroundColor: '#f5f5f5',
+        flex:1,
+        margin: 0,
+        padding: 0,
         borderRadius: 10,
+        marginTop: '-45vh',
+        marginBottom: '2vh',
+        overflow:"scroll",
     },
     workoutDiv: {
+        backgroundColor: colors.grey,
         padding: 10,
+        paddingLeft:20,
         borderRadius: 10,
         marginBottom: 10,
     },
     workoutHeader: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
     },
     workoutHeaderText: {
-        fontSize: 16,
+        fontSize: 24,
+        color: colors.white,
+        fontWeight: 400,
+        marginLeft: 10,
     },
     arrow: {
-        width: 20,
-        height: 20,
+        marginLeft: 'auto',
+        width: 40,
+        height: 40,
+        tintColor: colors.mainColor,
     },
     rotateArrow: {
         transform: [{ rotate: '90deg' }],
     },
     workoutIcon: {
-        width: 30,
-        height: 30,
+        width: 50,
+        height: 50,
         marginRight: 10, // Adjust as needed
     },
     expandedContent: {
@@ -297,14 +319,51 @@ const styles = StyleSheet.create({
     exerciseTitle: {
         fontSize: 14,
         marginBottom: 4,
+        color:colors.white,
     },
     exerciseSets: {
         fontSize: 14,
         marginBottom: 4,
+        color:colors.white,
     },
     buttonsContainer: {
         flexDirection: 'column',
         alignSelf: 'end',
+    },
+    editWorkoutButton: {
+        backgroundColor:colors.secondaryColor,
+        marginBottom: 10,
+        paddingVertical: 6,
+        paddingHorizontal: 10,
+        borderRadius: 5,
+
+    },
+    playWorkoutButton: {
+        backgroundColor:colors.mainColor,
+        paddingVertical: 6,
+        paddingHorizontal: 10,
+        borderRadius: 5,
+    },
+    createWorkoutButton:{
+        backgroundColor:colors.mainColor,
+        paddingHorizontal:'auto',
+        paddingVertical:20,
+        margin: "auto",
+        width: '100%',
+        display: 'flex',
+        justifyContent:"center",
+        alignItems: "center",
+        borderRadius: 10,
+    },
+    bigButtonText: {
+        color:colors.darkGrey,
+        fontWeight:500,
+        fontSize: 20,
+    },
+    smallButtonText: {
+        color:colors.darkGrey,
+        fontWeight:400,
+        fontSize: 20,
     },
 });
 
